@@ -208,7 +208,7 @@ where
     T: Display + Num + Clone + Copy,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "x: {}, y: {}", self.x, self.y)
+        write!(f, "x: {}\ny: {}\nz: {}", self.x, self.y, self.z)
     }
 }
 
