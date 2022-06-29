@@ -20,7 +20,7 @@ lamar = { git = "https://github.com/FFuuZZuu/lamar", branch = "main" }
 
 To generate the documentaiton for this app, clone the repository and run
 ```sh
-cargo doc --opem
+cargo doc --open
 ```
 to generate and open the docs in your default browser.
 
