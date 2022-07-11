@@ -6,7 +6,7 @@ use std::{
 
 /// A generic 2D Vector implementation.
 /// Takes 2 generic numbers (both must be same type).
-#[derive(Clone, Copy, PartialEq, Debug)]
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub struct Vec2<T>
 where
     T: Num + Copy,
@@ -41,13 +41,21 @@ where
     // TODO: Swizzle?
 }
 
+impl Vec2<f32> {
+    /// Creates a 2D Vector with all values set to 0.0
+    pub fn zero() -> Self {
+        Self { x: 0.0, y: 0.0 }
+    }
+}
+
 /// Allows for the following syntax:
 /// ```rust
 /// # use lamar::vector::Vec2;
 /// let a = Vec2::new(10, 12);
 /// let b = Vec2::new(16, 48);
 /// let c = a + b;
-/// // c = Vec2 { a.x + b.x, a.y + b.y }
+///
+/// assert_eq!(c, Vec2::new(a.x + b.x, a.y + b.y));
 /// ```
 impl<T> Add for Vec2<T>
 where
@@ -69,7 +77,8 @@ where
 /// let a = Vec2::new(10, 12);
 /// let b = 10;
 /// let c = a + b;
-/// // c = Vec2 { 20, 22 }
+///
+/// assert_eq!(c, Vec2::new(10 + 10, 12 + 10));
 /// ```
 impl<T> Add<T> for Vec2<T>
 where
@@ -91,7 +100,8 @@ where
 /// let a = Vec2::new(10, 12);
 /// let b = Vec2::new(16, 48);
 /// let c = a - b;
-/// // c = Vec2 { a.x - b.x, a.y - b.y }
+///
+/// assert_eq!(c, Vec2::new(10 - 16, 12 - 48));
 /// ```
 impl<T> Sub for Vec2<T>
 where
@@ -113,7 +123,8 @@ where
 /// let a = Vec2::new(10, 12);
 /// let b = 10;
 /// let c = a - b;
-/// // c = Vec2 { 0, 2 }
+///
+/// assert_eq!(c, Vec2::new(10 - 10, 12 - 10));
 /// ```
 impl<T> Sub<T> for Vec2<T>
 where
@@ -134,7 +145,9 @@ where
 /// # use lamar::vector::Vec2;
 /// let a = Vec2::new(10, 12);
 /// let b = Vec2::new(16, 48);
-/// let c = a * b; // the same as 'a.cross(&b)'
+/// let c = a * b;
+///
+/// assert_eq!(c, a.cross(&b));
 /// ```
 impl<T> Mul for Vec2<T>
 where
@@ -153,7 +166,8 @@ where
 /// let a = Vec2::new(10, 12);
 /// let b = 10;
 /// let c = a * b;
-/// // c = Vec2 { 100, 120 }
+///
+/// assert_eq!(c, Vec2::new(10 * 10, 12 * 10));
 /// ```
 impl<T> Mul<T> for Vec2<T>
 where
@@ -175,7 +189,8 @@ where
 /// let a = Vec2::new(10, 12);
 /// let b = 2;
 /// let c = a / b;
-/// // c = Vec2 { 5, 6 }
+///
+/// assert_eq!(c, Vec2::new(10 / 2, 12 / 2));
 /// ```
 impl<T> Div<T> for Vec2<T>
 where
@@ -200,10 +215,17 @@ where
     }
 }
 
+#[cfg(test)]
 mod test {
+    use super::Vec2;
+
+    #[test]
+    fn zero_vec2_test() {
+        assert_eq!(Vec2::zero(), Vec2::new(0.0, 0.0));
+    }
+
     #[test]
     fn dot_product_test() {
-        use super::Vec2;
         let lhs = Vec2::new(32, 64);
         let rhs = Vec2::new(12, 10);
 
@@ -212,7 +234,6 @@ mod test {
 
     #[test]
     fn cross_product_test() {
-        use super::Vec2;
         let lhs = Vec2::new(32, 64);
         let rhs = Vec2::new(12, 10);
 
@@ -221,7 +242,6 @@ mod test {
 
     #[test]
     fn cross_product_mul_trait_test() {
-        use super::Vec2;
         let lhs = Vec2::new(32, 64);
         let rhs = Vec2::new(12, 10);
 
@@ -230,7 +250,6 @@ mod test {
 
     #[test]
     fn add_test() {
-        use super::Vec2;
         let lhs = Vec2::new(32, 64);
         let rhs = Vec2::new(12, 10);
 
@@ -239,7 +258,6 @@ mod test {
 
     #[test]
     fn sub_test() {
-        use super::Vec2;
         let lhs = Vec2::new(32, 64);
         let rhs = Vec2::new(12, 10);
 
@@ -248,7 +266,6 @@ mod test {
 
     #[test]
     fn add_scalar_test() {
-        use super::Vec2;
         let lhs = Vec2::new(32, 64);
         let rhs = 10;
 
@@ -257,7 +274,6 @@ mod test {
 
     #[test]
     fn sub_scalar_test() {
-        use super::Vec2;
         let lhs = Vec2::new(32, 64);
         let rhs = 10;
 
@@ -266,7 +282,6 @@ mod test {
 
     #[test]
     fn mul_scalar_test() {
-        use super::Vec2;
         let lhs = Vec2::new(32, 64);
         let rhs = 10;
 
@@ -275,7 +290,6 @@ mod test {
 
     #[test]
     fn div_scalar_test() {
-        use super::Vec2;
         let lhs = Vec2::new(32, 64);
         let rhs = 4;
 

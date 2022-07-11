@@ -6,7 +6,7 @@ use std::{
 
 /// A generic 3D Vector implementation.
 /// Takes 3 generic numbers (both must be same type).
-#[derive(Clone, Copy, PartialEq, Debug)]
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub struct Vec3<T>
 where
     T: Num + Clone + Copy,
@@ -32,10 +32,8 @@ where
         self.x * rhs.x + self.y * rhs.y + self.z * rhs.z
     }
 
-    // TODO: FIX
+    // TODO: Explaination comment?
     /// Return the cross product of two 3D Vectors
-    ///
-    /// `a.x * b.y - a.y * b.x`
     pub fn cross(&self, rhs: &Vec3<T>) -> Vec3<T> {
         Self {
             x: self.y * rhs.z - self.z * rhs.y,
@@ -47,13 +45,25 @@ where
     // TODO: Swizzle?
 }
 
+impl Vec3<f32> {
+    /// Create a 3D vector with all values initialised to 0.0
+    pub fn zero() -> Vec3<f32> {
+        Self {
+            x: 0.0,
+            y: 0.0,
+            z: 0.0,
+        }
+    }
+}
+
 /// Allows for the following syntax:
 /// ```rust
 /// # use lamar::vector::Vec3;
 /// let a = Vec3::new(2, 4, 8);
 /// let b = Vec3::new(16, 32, 64);
 /// let c = a + b;
-/// // c = Vec3 { a.x + b.x, a.y + b.y, a.z + b.z }
+///
+/// assert_eq!(c, Vec3::new(a.x + b.x, a.y + b.y, a.z + b.z));
 /// ```
 impl<T> Add for Vec3<T>
 where
@@ -76,7 +86,8 @@ where
 /// let a = Vec3::new(4, 7, 8);
 /// let b = 2;
 /// let c = a + b;
-/// // c = Vec3 { 6, 9, 10 }
+///
+/// assert_eq!(c, Vec3::new(4 + 2, 7 + 2, 8 + 2));
 /// ```
 impl<T> Add<T> for Vec3<T>
 where
@@ -99,7 +110,8 @@ where
 /// let a = Vec3::new(2, 4, 8);
 /// let b = Vec3::new(16, 32, 64);
 /// let c = a - b;
-/// // c = Vec3 { a.x - b.x, a.y - b.y, a.z - b.z }
+///
+/// assert_eq!(c, Vec3::new(a.x - b.x, a.y - b.y, a.z - b.z));
 /// ```
 impl<T> Sub for Vec3<T>
 where
@@ -122,7 +134,8 @@ where
 /// let a = Vec3::new(4, 7, 8);
 /// let b = 2;
 /// let c = a - b;
-/// // c = Vec3 { 2, 5, 6 }
+///
+/// assert_eq!(c, Vec3::new(4 - 2, 7 - 2, 8 - 2));
 /// ```
 impl<T> Sub<T> for Vec3<T>
 where
@@ -144,7 +157,9 @@ where
 /// # use lamar::vector::Vec3;
 /// let a = Vec3::new(2, 4, 8);
 /// let b = Vec3::new(16, 32, 64);
-/// let c = a * b; // the same as 'a.cross(&b)'
+/// let c = a * b;
+///
+/// assert_eq!(c, a.cross(&b));
 /// ```
 impl<T> Mul for Vec3<T>
 where
@@ -163,7 +178,8 @@ where
 /// let a = Vec3::new(4, 7, 8);
 /// let b = 2;
 /// let c = a * b;
-/// // c = Vec3 { 8, 14, 16 }
+///
+/// assert_eq!(c, Vec3::new(4 * 2, 7 * 2, 8 * 2));
 /// ```
 impl<T> Mul<T> for Vec3<T>
 where
@@ -186,7 +202,8 @@ where
 /// let a = Vec3::new(4, 6, 12);
 /// let b = 2;
 /// let c = a / b;
-/// // c = Vec3 { 2, 3, 6 }
+///
+/// assert_eq!(c, Vec3::new(4 / 2, 6 / 2, 12 / 2));
 /// ```
 impl<T> Div<T> for Vec3<T>
 where
@@ -212,10 +229,17 @@ where
     }
 }
 
+#[cfg(test)]
 mod test {
+    use crate::vector::Vec3;
+
+    #[test]
+    fn zero_vec3_test() {
+        assert_eq!(Vec3::zero(), Vec3::new(0.0, 0.0, 0.0));
+    }
+
     #[test]
     fn dot_product_test() {
-        use super::Vec3;
         let lhs = Vec3::new(2, 4, 8);
         let rhs = Vec3::new(16, 32, 64);
 
@@ -224,7 +248,6 @@ mod test {
 
     #[test]
     fn cross_product_test() {
-        use super::Vec3;
         let lhs = Vec3::new(5, 10, 15);
         let rhs = Vec3::new(3, 1, 7);
 
@@ -233,7 +256,6 @@ mod test {
 
     #[test]
     fn cross_product_mul_trait_test() {
-        use super::Vec3;
         let lhs = Vec3::new(5, 10, 15);
         let rhs = Vec3::new(3, 1, 7);
 
@@ -242,7 +264,6 @@ mod test {
 
     #[test]
     fn add_test() {
-        use super::Vec3;
         let lhs = Vec3::new(2, 4, 8);
         let rhs = Vec3::new(16, 32, 64);
 
@@ -251,7 +272,6 @@ mod test {
 
     #[test]
     fn sub_test() {
-        use super::Vec3;
         let lhs = Vec3::new(2, 4, 8);
         let rhs = Vec3::new(16, 32, 64);
 
@@ -260,7 +280,6 @@ mod test {
 
     #[test]
     fn add_scalar_test() {
-        use super::Vec3;
         let lhs = Vec3::new(32, 64, 128);
         let rhs = 10;
 
@@ -269,7 +288,6 @@ mod test {
 
     #[test]
     fn sub_scalar_test() {
-        use super::Vec3;
         let lhs = Vec3::new(32, 64, 128);
         let rhs = 10;
 
@@ -278,7 +296,6 @@ mod test {
 
     #[test]
     fn mul_scalar_test() {
-        use super::Vec3;
         let lhs = Vec3::new(32, 64, 128);
         let rhs = 10;
 
@@ -287,7 +304,6 @@ mod test {
 
     #[test]
     fn div_scalar_test() {
-        use super::Vec3;
         let lhs = Vec3::new(32, 64, 128);
         let rhs = 4;
 
