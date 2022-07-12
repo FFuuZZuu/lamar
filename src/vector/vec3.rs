@@ -5,7 +5,7 @@ use std::{
 };
 
 /// A generic 3D Vector implementation.
-/// Takes 3 generic numbers (both must be same type).
+/// Takes 3 generic numbers (all 3 must be same type).
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub struct Vec3<T>
 where
@@ -27,7 +27,7 @@ where
 
     /// Return the dot product of two 3D Vectors
     ///
-    /// `a.x * b.x + a.y + b.y`
+    /// `a.x * b.x + a.y * b.y + a.z * b.z`
     pub fn dot(&self, rhs: &Vec3<T>) -> T {
         self.x * rhs.x + self.y * rhs.y + self.z * rhs.z
     }

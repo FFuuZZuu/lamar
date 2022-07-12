@@ -26,7 +26,7 @@ where
 
     /// Return the dot product of two 2D Vectors
     ///
-    /// `a.x * b.x + a.y + b.y`
+    /// `a.x * b.x + a.y * b.y`
     pub fn dot(&self, rhs: &Vec2<T>) -> T {
         self.x * rhs.x + self.y * rhs.y
     }
